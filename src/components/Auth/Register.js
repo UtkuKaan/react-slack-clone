@@ -9,6 +9,7 @@ import {
   Message,
   Icon
 } from "semantic-ui-react";
+import md5 from "md5";
 import firebase from "../../firebase";
 
 class Register extends React.Component {
@@ -18,7 +19,8 @@ class Register extends React.Component {
     password: "",
     passwordConfirmation: "",
     errors: [],
-    loading: false
+    loading: false,
+    usersRef: firebase.database().ref("users")
   };
 
   isFormValid = () => {
@@ -73,7 +75,26 @@ class Register extends React.Component {
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(createdUser => {
           console.log(createdUser);
-          this.setState({ loading: false });
+          createdUser.user
+            .updateProfile({
+              displayName: this.state.username,
+              photoURL: `https://api.adorable.io/avatars/285/${md5(
+                createdUser.user.email
+              )}`
+            })
+            .then(() => {
+              this.saveUser(createdUser).then(() => {
+                console.log("user saved");
+              });
+              this.setState({ loading: false });
+            })
+            .catch(err => {
+              console.error(err);
+              this.setState({
+                errors: this.state.errors.concat(err),
+                loading: false
+              });
+            });
         })
         .catch(err => {
           console.error(err);
@@ -83,6 +104,13 @@ class Register extends React.Component {
           });
         });
     }
+  };
+
+  saveUser = createdUser => {
+    return this.state.usersRef.child(createdUser.user.uid).set({
+      name: createdUser.user.displayName,
+      avatar: createdUser.user.photoURL
+    });
   };
 
   handleInputError = (errors, inputName) => {
