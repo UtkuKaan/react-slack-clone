@@ -6,6 +6,9 @@
     "prettier",
     "prettier/react"
   ],
+  "rules": {
+    "no-console": 1
+  },
   "plugins": ["jsx-a11y"],
   "parserOptions": {
     "ecmaVersion": 2018,
