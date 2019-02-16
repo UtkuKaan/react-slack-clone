@@ -16,7 +16,7 @@ import App from "./components/App";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import rootReducer from "./reducers";
-import { setUser } from "./actions";
+import { setUser, clearUser } from "./actions";
 import Spinner from "./components/Spinner";
 
 const store = createStore(rootReducer, composeWithDevTools());
@@ -27,6 +27,9 @@ class Root extends React.Component {
       if (user) {
         this.props.setUser(user);
         this.props.history.push("/");
+      } else {
+        this.props.history.push("/login");
+        this.props.clearUser();
       }
     });
   }
@@ -50,7 +53,7 @@ const mapStateToProps = state => ({
 const RootWithAuth = withRouter(
   connect(
     mapStateToProps,
-    { setUser }
+    { setUser, clearUser }
   )(Root)
 );
 
