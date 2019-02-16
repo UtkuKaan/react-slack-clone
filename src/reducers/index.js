@@ -15,7 +15,7 @@ const userReducer = (state = initialUserState, action) => {
       };
     case actionTypes.CLEAR_USER:
       return {
-        ...initialUserState,
+        ...state,
         isLoading: false
       };
     default:
@@ -23,8 +23,25 @@ const userReducer = (state = initialUserState, action) => {
   }
 };
 
+const initialChannelState = {
+  currentChannel: null
+};
+
+const channelReducer = (state = initialChannelState, action) => {
+  switch (action.type) {
+    case actionTypes.SET_CURRENT_CHANNEL:
+      return {
+        ...state,
+        currentChannel: action.payload.currentChannel
+      };
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
-  user: userReducer
+  user: userReducer,
+  channel: channelReducer
 });
 
 export default rootReducer;
