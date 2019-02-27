@@ -69,6 +69,7 @@ class MessageForm extends React.Component {
               : ""
           }
           onChange={this.handleChange}
+          value={this.state.message}
           style={{ marginBottom: "0.7em" }}
           label={<Button icon={"add"} />}
           labelPosition="left"
