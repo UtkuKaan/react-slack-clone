@@ -1,8 +1,9 @@
 import React from "react";
 import { Segment, Button, Input } from "semantic-ui-react";
 import uuidv4 from "uuid/v4";
-import FileModal from "./FileModal";
 import firebase from "../../firebase";
+import FileModal from "./FileModal";
+import ProgressBar from "./ProgressBar";
 
 class MessageForm extends React.Component {
   state = {
@@ -168,17 +169,22 @@ class MessageForm extends React.Component {
           />
           <Button
             onClick={this.openModal}
+            disabled={this.state.uploadState === "uploading"}
             color="teal"
             content="Upload Media"
             labelPosition="right"
             icon="cloud upload"
           />
-          <FileModal
-            modal={this.state.modal}
-            closeModal={this.closeModal}
-            uploadFile={this.uploadFile}
-          />
         </Button.Group>
+        <FileModal
+          modal={this.state.modal}
+          closeModal={this.closeModal}
+          uploadFile={this.uploadFile}
+        />
+        <ProgressBar
+          uploadState={this.state.uploadState}
+          percentUploaded={this.state.percentUploaded}
+        />
       </Segment>
     );
   }
