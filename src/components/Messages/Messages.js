@@ -7,6 +7,9 @@ import firebase from "../../firebase";
 
 class Messages extends React.Component {
   state = {
+    searchTerm: "",
+    searchLoading: false,
+    searchResults: [],
     messagesRef: firebase.database().ref("messages"),
     messages: [],
     messagesLoading: true,
@@ -36,6 +39,30 @@ class Messages extends React.Component {
       });
       this.countUniqueUsers(loadedMessages);
     });
+  };
+
+  handleSearchChange = event => {
+    this.setState({ searchTerm: event.target.value, searchLoading: true }, () =>
+      this.handleSearchMessages()
+    );
+  };
+
+  handleSearchMessages = () => {
+    const channelMessages = [...this.state.messages];
+    const regex = new RegExp(this.state.searchTerm, "gi");
+
+    const searchResults = channelMessages.reduce((acc, message) => {
+      if (
+        (message.content && message.content.match(regex)) ||
+        message.user.name.match(regex)
+      ) {
+        acc.push(message);
+      }
+
+      return acc;
+    }, []);
+    this.setState({ searchResults });
+    setTimeout(() => this.setState({ searchLoading: false }), 700);
   };
 
   countUniqueUsers = messages => {
@@ -69,11 +96,15 @@ class Messages extends React.Component {
         <MessagesHeader
           channelName={this.displayChannelName(this.state.channel)}
           numUniqueUsers={this.state.numUniqueUsers}
+          handleSearchChange={this.handleSearchChange}
+          searchLoading={this.state.searchLoading}
         />
 
         <Segment className="messages">
           <Comment.Group>
-            {this.displayMessages(this.state.messages)}
+            {this.state.searchTerm
+              ? this.displayMessages(this.state.searchResults)
+              : this.displayMessages(this.state.messages)}
           </Comment.Group>
         </Segment>
 
