@@ -7,6 +7,8 @@ import firebase from "../../firebase";
 
 class Messages extends React.Component {
   state = {
+    privateChannel: this.props.isPrivateChannel,
+    privateMessagesRef: firebase.database().ref("privateMessages"),
     searchTerm: "",
     searchLoading: false,
     searchResults: [],
@@ -30,8 +32,9 @@ class Messages extends React.Component {
 
   addMessageListener = channelId => {
     let loadedMessages = [];
+    const ref = this.getMessagesRef();
 
-    this.state.messagesRef.child(channelId).on("child_added", snap => {
+    ref.child(channelId).on("child_added", snap => {
       loadedMessages.push(snap.val());
       this.setState({
         messages: loadedMessages,
@@ -39,6 +42,12 @@ class Messages extends React.Component {
       });
       this.countUniqueUsers(loadedMessages);
     });
+  };
+
+  getMessagesRef = () => {
+    return this.state.privateChannel
+      ? this.state.privateMessagesRef
+      : this.state.messagesRef;
   };
 
   handleSearchChange = event => {
@@ -88,7 +97,11 @@ class Messages extends React.Component {
       />
     ));
 
-  displayChannelName = channel => (channel ? `#${channel.name}` : "");
+  displayChannelName = channel => {
+    return channel
+      ? `${this.state.privateChannel ? "@" : "#"}${channel.name}`
+      : "";
+  };
 
   render() {
     return (
@@ -98,6 +111,7 @@ class Messages extends React.Component {
           numUniqueUsers={this.state.numUniqueUsers}
           handleSearchChange={this.handleSearchChange}
           searchLoading={this.state.searchLoading}
+          isPrivateChannel={this.state.privateChannel}
         />
 
         <Segment className="messages">
@@ -112,6 +126,8 @@ class Messages extends React.Component {
           messagesRef={this.state.messagesRef}
           currentChannel={this.state.channel}
           currentUser={this.state.user}
+          isPrivateChannel={this.state.privateChannel}
+          getMessagesRef={this.getMessagesRef}
         />
       </React.Fragment>
     );
