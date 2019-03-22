@@ -6,6 +6,7 @@ import firebase from "../../firebase";
 
 class DirectMessages extends Component {
   state = {
+    activeChannel: "",
     user: this.props.currentUser,
     users: [],
     usersRef: firebase.database().ref("users"),
@@ -77,6 +78,7 @@ class DirectMessages extends Component {
 
     this.props.setCurrentChannel(channelData);
     this.props.setPrivateChannel(true);
+    this.setActiveChannel(user.uid);
   };
 
   getChannelID = userID => {
@@ -84,6 +86,10 @@ class DirectMessages extends Component {
     return userID < currentUserID
       ? `${userID}/${currentUserID}`
       : `${currentUserID}/${userID}`;
+  };
+
+  setActiveChannel = userID => {
+    this.setState({ activeChannel: userID });
   };
 
   render() {
@@ -98,6 +104,7 @@ class DirectMessages extends Component {
         {this.state.users.map(user => (
           <Menu.Item
             key={user.uid}
+            active={this.state.activeChannel === user.uid}
             onClick={() => this.changeChannel(user)}
             style={{ opacity: 0.7, fontStyle: "italic" }}
           >
