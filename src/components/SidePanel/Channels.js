@@ -121,7 +121,11 @@ class Channels extends React.Component {
         this.closeModal();
         console.log("channel added");
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        if (err) {
+          console.error(err);
+        }
+      });
   };
 
   changeChannel = channel => {
