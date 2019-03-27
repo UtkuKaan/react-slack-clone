@@ -1,4 +1,3 @@
-html,
 body,
 .app {
   height: 100vh;
@@ -15,6 +14,10 @@ body,
 .messages {
   height: 440px;
   overflow-y: scroll;
+}
+
+.disable-max-width {
+  max-width: none !important;
 }
 
 /* MessageForm.js */
@@ -40,4 +43,28 @@ body,
 /* ProgressBar.js */
 .progress__bar {
   margin: 0.3em 0 0 0 !important;
+}
+
+/* ColorPanel.js */
+.color__container {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 35px;
+  border-radius: 3px;
+}
+
+.color__square {
+  width: 35px;
+  height: 35px;
+}
+
+.color__overlay {
+  width: 85px;
+  height: 35px;
+  transform: rotate(225deg);
+}
+
+.color__label {
+  margin-bottom: 1rem !important;
 }

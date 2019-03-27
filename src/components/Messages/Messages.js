@@ -5,7 +5,7 @@ import MessagesHeader from "./MessagesHeader";
 import MessageForm from "./MessageForm";
 import Message from "./Message";
 import firebase from "../../firebase";
-import { setUserPosts, setUser } from "../../actions";
+import { setUserPosts } from "../../actions";
 
 class Messages extends React.Component {
   state = {
@@ -185,8 +185,8 @@ class Messages extends React.Component {
           isChannelStarred={this.state.isChannelStarred}
         />
 
-        <Segment className="messages">
-          <Comment.Group>
+        <Segment>
+          <Comment.Group className="messages disable-max-width">
             {this.state.searchTerm
               ? this.displayMessages(this.state.searchResults)
               : this.displayMessages(this.state.messages)}
