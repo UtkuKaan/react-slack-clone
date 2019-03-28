@@ -4,6 +4,7 @@ import { Segment, Comment } from "semantic-ui-react";
 import MessagesHeader from "./MessagesHeader";
 import MessageForm from "./MessageForm";
 import Message from "./Message";
+import Skeleton from "./Skeleton";
 import Typing from "./Typing";
 import firebase from "../../firebase";
 import { setUserPosts } from "../../actions";
@@ -233,6 +234,15 @@ class Messages extends React.Component {
       </div>
     ));
 
+  displayMessagesSkeleton = loading =>
+    loading ? (
+      <React.Fragment>
+        {[...Array(10)].map((_, i) => (
+          <Skeleton key={i} />
+        ))}
+      </React.Fragment>
+    ) : null;
+
   render() {
     return (
       <React.Fragment>
@@ -248,6 +258,7 @@ class Messages extends React.Component {
 
         <Segment>
           <Comment.Group className="messages disable-max-width">
+            {this.displayMessagesSkeleton(this.state.messagesLoading)}
             {this.state.searchTerm
               ? this.displayMessages(this.state.searchResults)
               : this.displayMessages(this.state.messages)}
