@@ -1,7 +1,5 @@
-Rules for Firebase storage
-
 service firebase.storage {
-  match /b/{PROJECTNAME}.appspot.com/o {
+  match /b/react-slack-clone-93c1a.appspot.com/o {
     match /avatars {
     	match /users/{userId} {
       	allow read: if request.auth != null;
