@@ -37,7 +37,7 @@ class MessageForm extends React.Component {
   closeModal = () => this.setState({ modal: false });
 
   handleKeyDown = event => {
-    if (event.ctrlKey && event.keyCode === 13) {
+    if (event.key === "Enter") {
       this.sendMessage();
     }
 
